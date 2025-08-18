@@ -14,6 +14,8 @@ contract SvgNft is ERC721, Ownable {
 
     uint256 private _nextTokenId;
 
+    string private constant BACKGROUND_IMAGE = "data:image/png;base64,YOUR_BASE64";
+
     constructor() ERC721("Svg Time", "STime") Ownable(msg.sender) {}
 
     receive() external payable {}

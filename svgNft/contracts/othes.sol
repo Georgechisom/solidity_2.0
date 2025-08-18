@@ -10,7 +10,7 @@ contract DynamicClockNFT is ERC721, Ownable {
     using Strings for uint256;
     
     uint256 private _tokenIdCounter;
-    string private constant BACKGROUND_IMAGE = "BASE64";
+    string private constant BACKGROUND_IMAGE = "data:image/png;base64,YOUR_BASE64";
     
     constructor() ERC721("Dynamic Clock", "CLOCK") Ownable(msg.sender) {}
     
