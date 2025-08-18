@@ -2,15 +2,17 @@ import { ethers } from "hardhat";
 import hre from "hardhat";
 
 async function main() {
-  console.log("Uniswap V2: Swap Exact Tokens for Tokens Supporting Fee on Transfer\n");
+  console.log(
+    "Uniswap V2: Swap Exact Tokens for Tokens Supporting Fee on Transfer\n"
+  );
 
   const AssetHolder = "0xf584f8728b874a6a5c7a8d4d387c9aae9172d621";
 
   await hre.network.provider.request({
     method: "hardhat_impersonateAccount",
-    params: [AssetHolder],
+    params: [AssetHolder], //done all
   });
-  
+
   const impersonatedSigner = await ethers.getSigner(AssetHolder);
 
   const USDCAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
@@ -36,19 +38,30 @@ async function main() {
 
   console.log("Getting amounts out...");
   const amountsOut = await Router.getAmountsOut(amountIn, path);
-  const amountOutMin = amountsOut[1] * 90n / 100n;
+  const amountOutMin = (amountsOut[1] * 90n) / 100n;
 
-  console.log("Expected DAI out:", ethers.formatUnits(amountsOut[1].toString(), 18));
-  console.log("Minimum DAI out:", ethers.formatUnits(amountOutMin.toString(), 18));
+  console.log(
+    "Expected DAI out:",
+    ethers.formatUnits(amountsOut[1].toString(), 18)
+  );
+  console.log(
+    "Minimum DAI out:",
+    ethers.formatUnits(amountOutMin.toString(), 18)
+  );
 
   console.log("Approving USDC...");
-  await USDC.connect(impersonatedSigner).approve(UNIRouter, amountIn, { gasPrice, gasLimit: 100000 });
+  await USDC.connect(impersonatedSigner).approve(UNIRouter, amountIn, {
+    gasPrice,
+    gasLimit: 100000,
+  });
   console.log("USDC approved");
 
   const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
 
   console.log("Swapping USDC for DAI with fee support...");
-  const swapTx = await Router.connect(impersonatedSigner).swapExactTokensForTokensSupportingFeeOnTransferTokens(
+  const swapTx = await Router.connect(
+    impersonatedSigner
+  ).swapExactTokensForTokensSupportingFeeOnTransferTokens(
     amountIn,
     amountOutMin,
     path,
@@ -72,8 +85,14 @@ async function main() {
   console.log();
 
   console.log("Changes:");
-  console.log("USDC Used:", ethers.formatUnits((usdcBalBefore - usdcBalAfter).toString(), 6));
-  console.log("DAI Received:", ethers.formatUnits((daiBalAfter - daiBalBefore).toString(), 18));
+  console.log(
+    "USDC Used:",
+    ethers.formatUnits((usdcBalBefore - usdcBalAfter).toString(), 6)
+  );
+  console.log(
+    "DAI Received:",
+    ethers.formatUnits((daiBalAfter - daiBalBefore).toString(), 18)
+  );
 }
 
 main().catch((error) => {
